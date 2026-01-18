@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" id="mainApp" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Master AI - Ultra Pro Max v7.0</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS المتقدم - مئات الأسطر من التصميم */
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #06b6d4;
+            --bg-dark: #030303;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --neon-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            font-family: 'Plus Jakarta Sans', 'Cairo', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* أنيميشن الخلفية */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* القائمة الجانبية الضخمة */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 400px;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.98);
+            backdrop-filter: blur(30px);
+            border-left: 1px solid var(--glass-border);
+            z-index: 2000;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px;
+            box-shadow: -20px 0 50px rgba(0,0,0,0.5);
+        }
+
+        .sidebar.active { right: 0; }
+
+        /* الأنماط الفنية - Style Cards */
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .style-item {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .style-item:hover {
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-5px);
+        }
+
+        .style-item.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            box-shadow: var(--neon-shadow);
+        }
+
+        /* إطار النتيجة - Result Frame */
+        .result-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: linear-gradient(45deg, #080808 25%, #0f0f0f 25%, #0f0f0f 50%, #080808 50%, #080808 75%, #0f0f0f 75%, #0f0f0f 100%);
+            background-size: 40px 40px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #logoImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* مخفي حتى يجهز */
+            transition: opacity 0.5s ease;
+        }
+
+        /* لودر فائق السرعة */
+        .turbo-loader {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* سجل الصور */
+        .history-scroll {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+
+        .history-card {
+            min-width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        /* أزرار مخصصة */
+        .btn-main {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        /* شاشة الترحيب */
+        #splash {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 1s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div id="splash">
+        <h1 class="text-6xl font-black italic tracking-tighter mb-4 animate-pulse">LOGO MASTER</h1>
+        <p class="text-indigo-500 font-bold tracking-[0.5em] text-xs">V7.0 ULTRA PRO MAX</p>
+    </div>
+
+    <aside id="sidebar" class="sidebar">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="text-2xl font-black italic" id="side-title">SETTINGS</h2>
+            <button onclick="toggleSidebar()" class="text-3xl hover:text-red-500 transition">✕</button>
+        </div>
+
+        <div class="space-y-10">
+            <section>
+                <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest block mb-6">Language / Idioma / اللغة</label>
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="changeLang('en')" class="p-4 glass rounded-2xl text-left hover:bg-white/5 transition border border-white/5">English (US)</button>
+                    <button onclick="changeLang('ar')" class="p-4 glass rounded-2xl text-right hover:bg-white/5 transition border border-white/5 font-bold">العربية (Main)</button>
+                    <button onclick="changeLang('es')" class="p-4 glass rounded-2xl text-left hover:bg-white/5 transition border border-white/5">Español (ES)</button>
+                    <button onclick="changeLang('tr')" class="p-4 glass rounded-2xl text-left hover:bg-white/5 transition border border-white/5">Türkçe (Studio)</button>
+                </div>
+            </section>
+
+            <section class="p-6 rounded-3xl bg-indigo-500/5 border border-indigo-500/20">
+                <h4 class="text-xs font-bold text-indigo-400 mb-2">Engine Status</h4>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                    <span class="text-[10px] font-black tracking-widest">REAL-TIME OVERCLOCK ACTIVE</span>
+                </div>
+            </section>
+        </div>
+    </aside>
+
+    <nav class="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center font-black italic text-2xl">L</div>
+            <span class="text-2xl font-black italic tracking-tighter hidden md:block">MASTER LOGO AI</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleSidebar()" class="w-12 h-12 rounded-2xl border border-white/10 flex items-center justify-center hover:bg-white/5 transition">
+                <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 pb-20">
+        
+        <div class="lg:col-span-5 space-y-10">
+            <header>
+                <h1 id="main-h1" class="text-5xl font-black italic tracking-tighter leading-none mb-4">Crafting Perfection.</h1>
+                <p id="main-p" class="text-gray-500">The world's fastest professional AI branding engine.</p>
+            </header>
+
+            <div class="space-y-6">
+                <div class="group">
+                    <label id="lbl-name" class="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-3 block">Brand Name</label>
+                    <input type="text" id="brandName" placeholder="e.g. Nexus Tech" class="w-full bg-white/5 border border-white/10 p-6 rounded-[2rem] outline-none focus:border-indigo-600 text-xl font-bold transition-all">
+                </div>
+
+                <div class="group">
+                    <label id="lbl-icon" class="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-3 block">Main Element</label>
+                    <input type="text" id="brandElement" placeholder="e.g. Lion, Sword, Abstract..." class="w-full bg-white/5 border border-white/10 p-6 rounded-[2rem] outline-none focus:border-indigo-600 transition-all">
+                </div>
+
+                <div>
+                    <label id="lbl-style" class="text-[10px] font-bold text-indigo-400 uppercase tracking-[0.3em] mb-4 block">Visual Style</label>
+                    <div class="style-grid">
+                        <div class="style-item selected" onclick="selectStyle('minimal vector flat professional', this)">
+                            <div class="text-3xl mb-2">🎯</div><div class="text-[10px] font-bold uppercase">Minimalist</div>
+                        </div>
+                        <div class="style-item" onclick="selectStyle('3d luxury glass octane render', this)">
+                            <div class="text-3xl mb-2">💎</div><div class="text-[10px] font-bold uppercase">Luxury 3D</div>
+                        </div>
+                        <div class="style-item" onclick="selectStyle('royal vintage gold heraldry', this)">
+                            <div class="text-3xl mb-2">👑</div><div class="text-[10px] font-bold uppercase">Royal</div>
+                        </div>
+                        <div class="style-item" onclick="selectStyle('cyberpunk tech futuristic neon', this)">
+                            <div class="text-3xl mb-2">🚀</div><div class="text-[10px] font-bold uppercase">Futuristic</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="generateLogo()" id="btn-generate" class="w-full btn-main py-8 rounded-[2.5rem] text-2xl font-black">
+                    GENERATE NOW
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-8">
+            <div id="frame" class="result-container">
+                <img id="logoImage" alt="AI Generated Logo">
+                
+                <div id="loader" class="turbo-loader">
+                    <div class="spinner"></div>
+                    <p id="wait-text" class="text-[10px] font-black tracking-[0.6em] text-indigo-400 animate-pulse">BYPASSING SERVER LOAD...</p>
+                </div>
+                
+                <div id="placeholder" class="text-center opacity-20">
+                    <div class="text-8xl mb-4">🖼️</div>
+                    <p class="text-xs font-bold tracking-widest uppercase">Awaiting Inspiration</p>
+                </div>
+            </div>
+
+            <div id="action-btns" class="flex gap-4 opacity-0 transition-all duration-500 translate-y-10 pointer-events-none">
+                <button onclick="downloadLogo()" id="btn-download" class="flex-1 bg-white text-black py-6 rounded-[2rem] font-black text-sm hover:scale-[1.02] transition uppercase tracking-widest">Download 4K PNG</button>
+                <button onclick="addToGallery()" class="px-10 glass rounded-[2rem] font-bold border border-white/10 hover:bg-white/5 transition">SAVE</button>
+            </div>
+
+            <div class="pt-6 border-t border-white/5">
+                <h3 id="t-history" class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-6 ml-4">Production History</h3>
+                <div id="historyBar" class="history-scroll">
+                    </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // JavaScript الضخم - منطق التحكم الكامل
+        let currentStyle = 'minimal vector flat professional';
+        let isGenerating = false;
+        let logoHistory = [];
+
+        const langData = {
+            en: { main: 'Crafting Perfection.', sub: 'The world\'s fastest professional AI branding engine.', gen: 'GENERATE NOW', wait: 'BYPASSING SERVER LOAD...', dl: 'Download 4K PNG', hist: 'Production History', name: 'Brand Name', icon: 'Main Element', styl: 'Visual Style', settings: 'SETTINGS' },
+            ar: { main: 'صناعة الكمال.', sub: 'أسرع محرك ذكاء اصطناعي في العالم لتصميم الهويات التجارية.', gen: 'توليد الشعار الآن', wait: 'جاري تجاوز ضغط السيرفر...', dl: 'تحميل بجودة 4K', hist: 'سجل الإنتاج', name: 'اسم العلامة', icon: 'العنصر الأساسي', styl: 'النمط البصري', settings: 'الإعدادات' },
+            es: { main: 'Perfección Pura.', sub: 'El motor de branding AI más rápido del mundo.', gen: 'GENERAR AHORA', wait: 'SALTANDO CARGA DE SERVIDOR...', dl: 'Descargar 4K PNG', hist: 'Historial de Producción', name: 'Nombre de Marca', icon: 'Elemento Principal', styl: 'Estilo Visual', settings: 'AJUSTES' },
+            tr: { main: 'Kusursuz Tasarım.', sub: 'Dünyanın en hızlı profesyonel AI markalama motoru.', gen: 'ŞİMDİ OLUŞTUR', wait: 'SUNUCU YÜKÜ ATLANILIYOR...', dl: '4K PNG İNDİR', hist: 'Üretim Geçmişi', name: 'Marka Adı', icon: 'Ana Öğe', styl: 'Görsel Stil', settings: 'AYARLAR' }
+        };
+
+        // إدارة اللغة
+        function changeLang(l) {
+            const d = langData[l];
+            document.getElementById('mainApp').dir = (l === 'ar' ? 'rtl' : 'ltr');
+            document.getElementById('main-h1').innerText = d.main;
+            document.getElementById('main-p').innerText = d.sub;
+            document.getElementById('btn-generate').innerText = d.gen;
+            document.getElementById('wait-text').innerText = d.wait;
+            document.getElementById('btn-download').innerText = d.dl;
+            document.getElementById('t-history').innerText = d.hist;
+            document.getElementById('lbl-name').innerText = d.name;
+            document.getElementById('lbl-icon').innerText = d.icon;
+            document.getElementById('lbl-style').innerText = d.styl;
+            document.getElementById('side-title').innerText = d.settings;
+            toggleSidebar();
+        }
+
+        // شاشة الترحيب
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const sp = document.getElementById('splash');
+                sp.style.opacity = '0';
+                setTimeout(() => sp.remove(), 1000);
+            }, 1500);
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function selectStyle(s, el) {
+            currentStyle = s;
+            document.querySelectorAll('.style-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // المحرك الأساسي لإصلاح ظهور الصورة
+        async function generateLogo() {
+            if (isGenerating) return;
+
+            const name = document.getElementById('brandName').value.trim();
+            const element = document.getElementById('brandElement').value.trim();
+
+            if (!name) {
+                alert("Please enter a brand name first!");
+                return;
+            }
+
+            isGenerating = true;
+            const img = document.getElementById('logoImage');
+            const loader = document.getElementById('loader');
+            const placeholder = document.getElementById('placeholder');
+            const actionBtns = document.getElementById('action-btns');
+
+            // إخفاء القديم وإظهار اللودر
+            img.style.display = 'none';
+            placeholder.style.display = 'none';
+            loader.style.display = 'flex';
+            actionBtns.style.opacity = '0';
+            actionBtns.classList.add('pointer-events-none');
+
+            // بناء البرومبت الاحترافي
+            const finalPrompt = `Professional minimalist logo for "${name}", focus on ${element}, ${currentStyle}, high resolution, sharp edges, vector style, white background, masterpiece.`;
+            const seed = Math.floor(Math.random() * 10000000);
+            
+            // الرابط السحري الأسرع مع Bypass
+            const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(finalPrompt)}?width=1024&height=1024&seed=${seed}&nologo=true&model=turbo&cache=${Date.now()}`;
+
+            // تقنية الـ Image Bridge لضمان الظهور
+            const loaderImg = new Image();
+            loaderImg.crossOrigin = "anonymous"; // محاولة حل مشاكل CORS
+            loaderImg.src = imageUrl;
+
+            loaderImg.onload = function() {
+                img.src = imageUrl;
+                img.style.display = 'block';
+                loader.style.display = 'none';
+                actionBtns.style.opacity = '1';
+                actionBtns.classList.remove('pointer-events-none');
+                actionBtns.style.transform = 'translateY(0)';
+                isGenerating = false;
+            };
+
+            loaderImg.onerror = function() {
+                console.log("Retrying with fallback route...");
+                // إعادة محاولة فورية بدون توقف
+                isGenerating = false;
+                generateLogo();
+            };
+        }
+
+        function downloadLogo() {
+            const url = document.getElementById('logoImage').src;
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `AI_Logo_Master_${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function addToGallery() {
+            const url = document.getElementById('logoImage').src;
+            if(!url || logoHistory.includes(url)) return;
+            
+            logoHistory.unshift(url);
+            const bar = document.getElementById('historyBar');
+            bar.innerHTML = logoHistory.map(src => `
+                <div class="history-card" onclick="window.open('${src}')">
+                    <img src="${src}" class="w-full h-full object-cover">
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
