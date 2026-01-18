@@ -1294,3 +1294,145 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS MOBILE FIX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* منع أي حركات افتراضية للمتصفح قد تعطل التطبيق */
+        html, body { 
+            position: fixed; 
+            overflow: hidden; 
+            width: 100%; 
+            height: 100%; 
+            background: #000;
+            touch-action: none; /* يمنع المتصفح من اعتراض حركات اللمس */
+        }
+        
+        #app-wrapper {
+            height: 100%;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px;
+        }
+
+        .canvas-area {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #111;
+            border: 2px solid #222;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* أزرار كبيرة سهلة الضغط للهاتف */
+        .step-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #d4af37;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-btn:active {
+            background: #333;
+        }
+
+        input {
+            background: #111 !important;
+            border: 1px solid #333 !important;
+            color: white !important;
+            padding: 15px !important;
+            border-radius: 12px !important;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-wrapper">
+    <h1 class="text-center text-amber-500 font-black text-xl mb-6 tracking-widest">NEXUS STUDIO PRO</h1>
+
+    <div class="canvas-area mb-6 shadow-2xl">
+        <p id="placeholderText" class="text-gray-600 text-sm">أدخل البيانات واضغط "إنشاء"</p>
+        <img id="logoResult" class="hidden w-full h-full object-contain rounded-xl">
+        
+        <div id="loader" class="absolute inset-0 bg-black/90 hidden flex-col items-center justify-center rounded-xl">
+            <div class="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-amber-500 text-xs font-bold">جاري التصميم...</p>
+        </div>
+    </div>
+
+    <div class="space-y-4 mb-6">
+        <input type="text" id="brandName" placeholder="اسم العلامة التجارية">
+        <button onclick="generate()" id="genBtn" class="w-full bg-amber-600 text-white p-4 rounded-xl font-bold shadow-lg">
+            إنشاء الشعار الآن
+        </button>
+    </div>
+
+    <div id="controls" class="hidden space-y-4 bg-zinc-900/80 p-5 rounded-2xl border border-zinc-800">
+        <p class="text-center text-xs text-gray-500 font-bold uppercase">تعديل مستوى الإضاءة</p>
+        <div class="flex gap-4 items-center">
+            <button onclick="changeBright(-10)" class="step-btn">➖</button>
+            <div class="flex-1 text-center">
+                <span id="brightVal" class="text-xl font-bold">100%</span>
+            </div>
+            <button onclick="changeBright(10)" class="step-btn">➕</button>
+        </div>
+        <button onclick="download()" class="w-full bg-white text-black p-4 rounded-xl font-bold mt-4">حفظ الصورة</button>
+    </div>
+</div>
+
+<script>
+    let brightness = 100;
+
+    async function generate() {
+        const name = document.getElementById('brandName').value;
+        if(!name) return alert("يرجى كتابة الاسم!");
+
+        document.getElementById('loader').style.display = 'flex';
+        document.getElementById('genBtn').disabled = true;
+
+        const seed = Math.floor(Math.random() * 9999);
+        const url = `https://image.pollinations.ai/prompt/${encodeURIComponent('professional logo for ' + name + ', vector, minimalist')}?nologo=true&seed=${seed}`;
+
+        const img = document.getElementById('logoResult');
+        img.src = url;
+
+        img.onload = () => {
+            img.classList.remove('hidden');
+            document.getElementById('placeholderText').style.display = 'none';
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('controls').classList.remove('hidden');
+            document.getElementById('genBtn').disabled = false;
+        };
+    }
+
+    function changeBright(amount) {
+        brightness += amount;
+        if(brightness < 50) brightness = 50;
+        if(brightness > 200) brightness = 200;
+        
+        document.getElementById('brightVal').innerText = brightness + '%';
+        document.getElementById('logoResult').style.filter = `brightness(${brightness}%)`;
+    }
+
+    function download() {
+        const url = document.getElementById('logoResult').src;
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
