@@ -1,791 +1,831 @@
 <!DOCTYPE html>
-<html lang="en" id="app-root">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinity Logo AI - Ultimate Edition</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Professional AI Logo Studio - Classic Edition">
+    <title>NEXUS STUDIO | AI Logo Architect</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* * ==============================================
-         * CORE VARIABLES & THEME SETUP
-         * ==============================================
-         */
         :root {
-            --primary-color: #00f2ff;
-            --secondary-color: #7000ff;
-            --accent-color: #ff0055;
-            --bg-deep: #050505;
-            --glass-bg: rgba(20, 20, 20, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --font-en: 'Outfit', sans-serif;
-            --font-ar: 'Cairo', sans-serif;
-            --shadow-glow: 0 0 20px rgba(0, 242, 255, 0.3);
-            --transition-smooth: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            /* --- Color Palette: Midnight Luxury --- */
+            --bg-main: #0a0a0f; /* Deepest background */
+            --bg-secondary: #121218; /* Panels background */
+            --bg-tertiary: #1a1a24; /* Inputs and cards */
+            
+            --accent-primary: #d4af37; /* Classic Gold */
+            --accent-secondary: #3b82f6; /* Professional Blue */
+            --accent-success: #10b981;
+            --accent-danger: #ef4444;
+
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(212, 175, 55, 0.5); /* Gold hover */
+
+            /* --- Typography --- */
+            --font-en: 'Inter', sans-serif;
+            --font-ar: 'Noto Kufi Arabic', sans-serif;
+
+            /* --- Effects --- */
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            --glow-gold: 0 0 20px rgba(212, 175, 55, 0.2);
         }
 
+        /* --- Base Reset & Typography --- */
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            outline: none;
             -webkit-tap-highlight-color: transparent;
+            scrollbar-width: thin;
+            scrollbar-color: var(--bg-tertiary) var(--bg-main);
         }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            font-family: var(--font-en);
-            overflow-x: hidden;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* * ==============================================
-         * BACKGROUND ANIMATION (PARTICLES)
-         * ==============================================
-         */
-        #canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .gradient-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            z-index: -2;
-            opacity: 0.4;
-            animation: orb-float 10s infinite alternate;
-        }
-
-        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--secondary-color); }
-        .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--primary-color); animation-delay: -5s; }
-
-        @keyframes orb-float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(50px, 50px) scale(1.1); }
-        }
-
-        /* * ==============================================
-         * UI COMPONENTS: GLASSMORPHISM
-         * ==============================================
-         */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            transition: var(--transition-smooth);
-        }
-
-        .glass-panel:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.4);
-        }
-
-        /* * ==============================================
-         * TYPOGRAPHY & TEXT EFFECTS
-         * ==============================================
-         */
-        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.02em; }
         
-        .gradient-text {
-            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        html, body {
+            height: 100%;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-ar);
+            overflow: hidden;
         }
 
-        .neon-text {
-            color: var(--primary-color);
-            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        /* --- scrollbar styling --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background-color: var(--bg-tertiary); border-radius: 20px; }
+
+        /* --- Utility Classes & Components --- */
+        .panel-classic {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
         }
 
-        /* * ==============================================
-         * INPUT FIELDS
-         * ==============================================
-         */
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        .input-field {
+        .input-classic {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            padding: 20px 25px;
-            border-radius: 16px;
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 500;
-            transition: var(--transition-smooth);
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+        
+        .input-classic:focus {
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-gold);
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
-        .input-field:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-primary), #b89225);
+            color: black;
+            font-weight: 700;
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-gold:hover {
+            box-shadow: var(--glow-gold);
             transform: translateY(-2px);
         }
+        .btn-gold:active { transform: translateY(0); }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        .input-label {
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: #000;
-            padding: 0 10px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            border-radius: 4px;
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
+        .btn-secondary:hover { border-color: var(--text-secondary); background: var(--bg-main); }
 
-        /* * ==============================================
-         * STYLE CARDS (SELECTION)
-         * ==============================================
-         */
-        .style-grid {
+        /* --- Layout Structure --- */
+        #app-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: 420px 1fr; /* Fixed sidebar, fluid main content */
+            height: 100vh;
         }
 
-        .style-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 15px;
-            cursor: pointer;
-            text-align: center;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .style-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
-            transform: translateX(-100%);
-            transition: 0.5s;
-        }
-
-        .style-card:hover::before { transform: translateX(100%); }
-
-        .style-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .style-card.active {
-            border-color: var(--primary-color);
-            background: rgba(0, 242, 255, 0.05);
-            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.1);
-        }
-
-        .style-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
-        .style-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* * ==============================================
-         * ACTION BUTTONS
-         * ==============================================
-         */
-        .btn-main {
-            width: 100%;
-            padding: 22px;
-            border-radius: 18px;
-            border: none;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            font-size: 1.2rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition-smooth);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-main::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
-            transform: skewX(-20deg) translateX(-150%);
-            transition: 0.5s;
-        }
-
-        .btn-main:hover {
-            transform: scale(1.02);
-            box-shadow: 0 20px 50px rgba(99, 102, 241, 0.5);
-        }
-
-        .btn-main:hover::after { transform: skewX(-20deg) translateX(150%); }
-        .btn-main:active { transform: scale(0.98); }
-
-        /* * ==============================================
-         * RESULT AREA & LOADER
-         * ==============================================
-         */
-        .result-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: #000;
-            border-radius: 30px;
-            overflow: hidden;
-            border: 1px solid var(--glass-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #main-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            opacity: 0;
-            transform: scale(1.1);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        #main-image.loaded {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* اللودر السينمائي المتقدم */
-        .loader-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
+        #sidebar {
+            background-color: var(--bg-secondary);
+            border-left: 1px solid var(--border-light);
+            padding: 24px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
+            gap: 24px;
+        }
+
+        #main-viewport {
+            background-color: var(--bg-main);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            overflow-y: auto;
+        }
+
+        /* --- Specific Components --- */
+        /* Style Selector Cards */
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .style-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            padding: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .style-card:hover { border-color: var(--accent-secondary); }
+        .style-card.active {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--accent-primary);
+        }
+        .style-card i { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-secondary); }
+        .style-card.active i { color: var(--accent-primary); }
+
+        /* The Canvas/Image Area */
+        .viewport-stage {
+            flex: 1;
+            min-height: 500px;
+            background-image: 
+                linear-gradient(45deg, var(--bg-tertiary) 25%, transparent 25%), 
+                linear-gradient(-45deg, var(--bg-tertiary) 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, var(--bg-tertiary) 75%), 
+                linear-gradient(-45deg, transparent 75%, var(--bg-tertiary) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            position: relative;
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.3s;
+            overflow: hidden;
         }
 
-        .loader-overlay.active { opacity: 1; pointer-events: all; }
-
-        .scan-line {
-            width: 100%;
-            height: 2px;
-            background: var(--primary-color);
-            position: absolute;
-            top: 0;
-            animation: scan 2s infinite linear;
-            box-shadow: 0 0 20px var(--primary-color);
+        #main-canvas {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            box-shadow: var(--shadow-lg);
+            transition: filter 0.3s ease;
         }
 
-        @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-
-        .loading-text {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            letter-spacing: 3px;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink { 50% { opacity: 0.5; } }
-
-        /* * ==============================================
-         * SIDEBAR & NAVIGATION
-         * ==============================================
-         */
-        .sidebar {
-            position: fixed;
-            top: 0; right: 0;
-            width: 400px;
-            height: 100vh;
-            background: #0a0a0a;
-            border-left: 1px solid var(--glass-border);
-            transform: translateX(100%);
-            transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            z-index: 1000;
-            padding: 40px;
-            box-shadow: -50px 0 100px rgba(0,0,0,0.8);
-        }
-
-        .sidebar.open { transform: translateX(0); }
-        .overlay-bg {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 900;
+        /* Advanced Loader */
+        .loader-overlay {
+            position: absolute; inset: 0;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: 0.5s;
         }
-        .overlay-bg.active { opacity: 1; pointer-events: all; }
+        .loader-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .gold-spinner {
+            width: 60px; height: 60px;
+            border: 4px solid var(--border-light);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* * ==============================================
-         * RESPONSIVE DESIGN
-         * ==============================================
-         */
+        /* Range Sliders for Editor */
+        .slider-group { margin-bottom: 16px; }
+        .slider-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-secondary); }
+        .classic-range {
+            width: 100%; -webkit-appearance: none; height: 6px; border-radius: 5px; background: var(--bg-tertiary); outline: none;
+        }
+        .classic-range::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-primary); cursor: pointer; transition: 0.2s;
+        }
+        .classic-range::-webkit-slider-thumb:hover { transform: scale(1.2); box-shadow: var(--glow-gold); }
+
+        /* Responsive Design */
         @media (max-width: 1024px) {
-            .main-grid { grid-template-columns: 1fr; }
-            .sidebar { width: 100%; }
+            #app-container { grid-template-columns: 1fr; height: auto; overflow-y: auto; }
+            #sidebar { height: auto; border-left: none; border-bottom: 1px solid var(--border-light); }
+            #main-viewport { height: auto; min-height: 70vh; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="canvas-bg"></canvas>
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
+    <div id="app-container">
+        
+        <aside id="sidebar">
+            <div class="flex items-center gap-3 pb-6 border-b border-border-light">
+                <div class="w-10 h-10 bg-gradient-to-br from-accent-primary to-orange-600 rounded-lg flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-vector-square text-bg-main text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-accent-primary leading-none">NEXUS STUDIO</h1>
+                    <span class="text-xs text-text-secondary tracking-widest">CLASSIC EDITION v2.0</span>
+                </div>
+            </div>
 
-    <div class="overlay-bg" onclick="toggleMenu()"></div>
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-sm text-accent-primary font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group"></i> أساسيات المشروع
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="brandName" class="input-label">اسم العلامة التجارية (Brand Name)</label>
+                            <input type="text" id="brandName" placeholder="اكتب الاسم هنا..." class="input-classic text-lg font-bold" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="tagline" class="input-label">الشعار اللفظي (اختياري)</label>
+                            <input type="text" id="tagline" placeholder="مثال: Quality since 2020" class="input-classic">
+                        </div>
+                    </div>
+                </div>
 
-    <div id="splash-screen" class="fixed inset-0 bg-black z-[9999] flex flex-col items-center justify-center transition-opacity duration-700">
-        <div class="text-6xl font-black text-white mb-4 tracking-tighter animate-bounce">INFINITY AI</div>
-        <div class="w-32 h-1 bg-gray-800 rounded overflow-hidden">
-            <div class="h-full bg-cyan-400 animate-[fast-load_1s_infinite]"></div>
+                <div>
+                    <h2 class="text-sm text-accent-primary font-bold uppercase tracking-wider mb-4 flex items-center gap-2 mt-6">
+                        <i class="fa-solid fa-compass-drafting"></i> التوجيه البصري
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="visualElement" class="input-label">العنصر الرمزي (Visual Symbol)</label>
+                            <div class="relative">
+                                <input type="text" id="visualElement" placeholder="مثال: رأس أسد هندسي، درع حماية..." class="input-classic pr-10">
+                                <i class="fa-solid fa-lightbulb absolute right-4 top-1/2 -translate-y-1/2 text-text-muted"></i>
+                            </div>
+                            <div class="flex gap-2 mt-3 flex-wrap">
+                                <button onclick="app.fillInput('visualElement', 'Geometric Falcon')" class="text-xs bg-bg-tertiary border border-border-light px-3 py-1.5 rounded-full hover:border-accent-primary transition">صقر هندسي</button>
+                                <button onclick="app.fillInput('visualElement', 'Abstract Tech Circuit')" class="text-xs bg-bg-tertiary border border-border-light px-3 py-1.5 rounded-full hover:border-accent-primary transition">دائرة تقنية</button>
+                                <button onclick="app.fillInput('visualElement', 'Minimalist Mountain')" class="text-xs bg-bg-tertiary border border-border-light px-3 py-1.5 rounded-full hover:border-accent-primary transition">جبل بسيط</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="input-label mb-3">الأسلوب الفني (Artistic Style)</label>
+                            <div class="style-grid">
+                                <div class="style-card active" onclick="app.selectStyle(this, 'classic_luxury')">
+                                    <i class="fa-solid fa-crown"></i>
+                                    <div class="text-sm font-bold">Classic Luxury</div>
+                                </div>
+                                <div class="style-card" onclick="app.selectStyle(this, 'modern_minimal')">
+                                    <i class="fa-solid fa-bezier-curve"></i>
+                                    <div class="text-sm font-bold">Modern Minimal</div>
+                                </div>
+                                <div class="style-card" onclick="app.selectStyle(this, 'vintage_badge')">
+                                    <i class="fa-solid fa-certificate"></i>
+                                    <div class="text-sm font-bold">Vintage Badge</div>
+                                </div>
+                                <div class="style-card" onclick="app.selectStyle(this, 'abstract_mark')">
+                                    <i class="fa-brands fa-codepen"></i>
+                                    <div class="text-sm font-bold">Abstract Mark</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-4">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" id="transparentBg" class="w-5 h-5 accent-accent-primary cursor-pointer">
+                                <span class="text-sm text-text-secondary group-hover:text-text-primary transition">طلب خلفية شفافة (PNG)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-6 border-t border-border-light sticky bottom-0 bg-bg-secondary">
+                <button id="generateBtn" onclick="core.initiateGeneration()" class="btn-gold w-full text-lg">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>بدء تصميم الشعار</span>
+                </button>
+                <p id="statusText" class="text-center text-xs text-text-muted mt-3 font-mono h-4"></p>
+            </div>
+        </aside>
+
+        <main id="main-viewport">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-image"></i> مساحة العمل
+                </h2>
+                <button onclick="gallery.toggle()" class="btn-secondary text-sm">
+                    <i class="fa-solid fa-clock-rotate-left"></i> السجل
+                </button>
+            </div>
+
+            <div class="viewport-stage panel-classic relative group">
+                <div id="stagePlaceholder" class="text-center text-text-muted flex flex-col items-center transition-all duration-300">
+                    <i class="fa-solid fa-compass-drafting text-6xl mb-4 opacity-50"></i>
+                    <h3 class="text-xl font-bold text-text-primary mb-2">اللوحة جاهزة</h3>
+                    <p class="max-w-md">أدخل تفاصيل مشروعك في القائمة الجانبية لبدء عملية التصميم.</p>
+                </div>
+
+                <canvas id="main-canvas" class="hidden"></canvas>
+
+                <div id="loaderOverlay" class="loader-overlay">
+                    <div class="gold-spinner mb-6"></div>
+                    <h3 class="text-xl font-bold text-accent-primary mb-2 tracking-wider">جاري المعالجة</h3>
+                    <p id="loaderStatus" class="text-text-secondary font-mono text-sm">Initializing AI Core...</p>
+                    <div class="w-64 h-1.5 bg-bg-tertiary rounded-full mt-6 overflow-hidden">
+                        <div id="progressBar" class="h-full bg-accent-primary w-0 transition-all duration-[10s] ease-out"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="editorPanel" class="panel-classic p-6 hidden animate-pulse">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-border-light">
+                     <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i class="fa-solid fa-sliders"></i> محرر اللمسات الأخيرة
+                    </h3>
+                    <div class="flex gap-2">
+                        <button onclick="editor.reset()" class="btn-secondary text-xs px-3 py-1.5">إعادة تعيين</button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-bold text-text-secondary uppercase">الإضاءة والتباين</h4>
+                        <div class="slider-group">
+                            <div class="slider-header"><span>السطوع (Brightness)</span><span id="val-brightness">100%</span></div>
+                            <input type="range" id="in-brightness" min="50" max="150" value="100" class="classic-range" oninput="editor.update('brightness', this.value)">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-header"><span>التباين (Contrast)</span><span id="val-contrast">100%</span></div>
+                            <input type="range" id="in-contrast" min="50" max="150" value="100" class="classic-range" oninput="editor.update('contrast', this.value)">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="text-xs font-bold text-text-secondary uppercase">الألوان والتشبع</h4>
+                        <div class="slider-group">
+                            <div class="slider-header"><span>التشبع (Saturation)</span><span id="val-saturate">100%</span></div>
+                            <input type="range" id="in-saturate" min="0" max="200" value="100" class="classic-range" oninput="editor.update('saturate', this.value)">
+                        </div>
+                        <div class="slider-group">
+                            <div class="slider-header"><span>تدريج اللون (Hue)</span><span id="val-hue-rotate">0deg</span></div>
+                            <input type="range" id="in-hue-rotate" min="0" max="360" value="0" class="classic-range" oninput="editor.update('hue-rotate', this.value, 'deg')">
+                        </div>
+                    </div>
+
+                     <div class="flex flex-col justify-between gap-4">
+                        <div>
+                            <h4 class="text-xs font-bold text-text-secondary uppercase mb-3">لوحة الألوان المستخرجة</h4>
+                            <div id="colorPalette" class="flex gap-2 p-2 bg-bg-tertiary rounded-lg">
+                                <span class="text-xs text-text-muted">سيتم استخراج الألوان بعد الإنشاء</span>
+                            </div>
+                        </div>
+                        <button id="downloadBtn" onclick="editor.download()" class="btn-gold w-full py-4 mt-auto">
+                            <i class="fa-solid fa-download"></i> تحميل الشعار النهائي (HD)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="gallerySidebar" class="fixed top-0 right-0 h-full w-80 bg-bg-secondary border-l border-border-light z-50 transform translate-x-full transition-transform duration-300 p-6 overflow-y-auto shadow-2xl">
+             <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-clock-rotate-left mr-2"></i>سجل التصاميم</h3>
+                <button onclick="gallery.toggle()" class="text-text-secondary hover:text-text-primary"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+            <div id="galleryGrid" class="grid grid-cols-1 gap-4">
+                </div>
+             <button onclick="gallery.clear()" class="btn-secondary w-full mt-6 text-accent-danger border-accent-danger/30 hover:bg-accent-danger/10">
+                <i class="fa-solid fa-trash"></i> مسح السجل
+            </button>
         </div>
     </div>
 
-    <aside id="sidebar-menu" class="sidebar flex flex-col justify-between">
-        <div>
-            <div class="flex justify-between items-center mb-10">
-                <h2 class="text-2xl font-bold text-white tracking-widest">SYSTEM</h2>
-                <button onclick="toggleMenu()" class="text-gray-400 hover:text-white transition text-2xl">✕</button>
-            </div>
-
-            <div class="space-y-8">
-                <div>
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-4">Interface Language</label>
-                    <div class="grid gap-3">
-                        <button onclick="setLanguage('en')" class="w-full p-4 rounded-xl border border-white/10 text-left hover:bg-white/5 transition flex justify-between items-center group">
-                            <span class="font-bold">English</span>
-                            <div class="w-2 h-2 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100"></div>
-                        </button>
-                        <button onclick="setLanguage('ar')" class="w-full p-4 rounded-xl border border-white/10 text-right hover:bg-white/5 transition flex justify-between items-center flex-row-reverse group">
-                            <span class="font-bold font-[Cairo]">العربية</span>
-                            <div class="w-2 h-2 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100"></div>
-                        </button>
-                        <button onclick="setLanguage('es')" class="w-full p-4 rounded-xl border border-white/10 text-left hover:bg-white/5 transition flex justify-between items-center group">
-                            <span class="font-bold">Español</span>
-                            <div class="w-2 h-2 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100"></div>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-900/30 to-purple-900/30 border border-indigo-500/30">
-                    <div class="flex items-center gap-3 mb-2">
-                        <i class="fas fa-bolt text-yellow-400"></i>
-                        <h3 class="font-bold text-sm">TURBO MODE ACTIVE</h3>
-                    </div>
-                    <p class="text-xs text-gray-400 leading-relaxed">
-                        Connected to high-speed GPU clusters. Priority queue enabled for instant generation.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="text-center text-xs text-gray-600 font-mono">v8.2.0 STABLE • NO LOGS</div>
-    </aside>
-
-    <nav class="w-full p-6 flex justify-between items-center z-50 max-w-[1600px] mx-auto">
-        <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center border border-white/10 backdrop-blur-md">
-                <i class="fas fa-infinity text-cyan-400 text-xl"></i>
-            </div>
-            <span class="text-xl font-bold tracking-tight hidden sm:block">INFINITY <span class="text-cyan-400">AI</span></span>
-        </div>
-        <button onclick="toggleMenu()" class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition">
-            <i class="fas fa-bars text-white"></i>
-        </button>
-    </nav>
-
-    <main class="flex-1 flex items-center justify-center p-4 sm:p-8 z-10">
-        <div class="max-w-[1600px] w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-            
-            <div class="lg:col-span-5 space-y-8 animate-[fadeInUp_0.8s_ease]">
-                <div>
-                    <h1 id="hero-title" class="text-5xl sm:text-6xl font-black leading-none mb-4 gradient-text">Create the<br>Extraordinary.</h1>
-                    <p id="hero-desc" class="text-gray-400 text-lg">AI-Powered branding generated in seconds.</p>
-                </div>
-
-                <div class="glass-panel p-8 space-y-8">
-                    <div class="input-group">
-                        <label id="lbl-brand" class="input-label">Brand Name</label>
-                        <input type="text" id="brand-input" class="input-field" placeholder="Ex: Nebula Tech">
-                    </div>
-
-                    <div class="input-group">
-                        <label id="lbl-icon" class="input-label">Visual Element</label>
-                        <input type="text" id="element-input" class="input-field" placeholder="Ex: Cyber Fox, Shield...">
-                    </div>
-
-                    <div>
-                        <label id="lbl-style" class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-4 ml-2">Aesthetic Style</label>
-                        <div class="style-grid">
-                            <div class="style-card active" onclick="selectStyle('minimalist vector flat clean', this)">
-                                <i class="fas fa-bezier-curve style-icon text-cyan-400"></i>
-                                <span class="style-name">Minimal</span>
-                            </div>
-                            <div class="style-card" onclick="selectStyle('3d glossy octane render luxury', this)">
-                                <i class="fas fa-cube style-icon text-purple-400"></i>
-                                <span class="style-name">3D Glass</span>
-                            </div>
-                            <div class="style-card" onclick="selectStyle('cyberpunk neon futuristic tech', this)">
-                                <i class="fas fa-robot style-icon text-pink-400"></i>
-                                <span class="style-name">Cyber</span>
-                            </div>
-                            <div class="style-card" onclick="selectStyle('geometric abstract modern shapes', this)">
-                                <i class="fas fa-shapes style-icon text-yellow-400"></i>
-                                <span class="style-name">Abstract</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button id="btn-generate" onclick="startGeneration()" class="btn-main">
-                        <i class="fas fa-bolt mr-2"></i> GENERATE IDENTITY
-                    </button>
-                </div>
-            </div>
-
-            <div class="lg:col-span-7 space-y-6 animate-[fadeInUp_1s_ease]">
-                <div class="result-container glass-panel">
-                    <img id="main-image" src="" alt="Generated Logo">
-                    
-                    <div id="loader" class="loader-overlay">
-                        <div class="scan-line"></div>
-                        <div class="relative w-24 h-24 mb-4">
-                            <div class="absolute inset-0 border-4 border-cyan-500/30 rounded-full animate-spin"></div>
-                            <div class="absolute inset-0 border-4 border-t-cyan-400 rounded-full animate-spin"></div>
-                            <div class="absolute inset-4 bg-cyan-500/10 rounded-full blur-md animate-pulse"></div>
-                        </div>
-                        <p id="loading-text" class="loading-text">INITIALIZING CORE...</p>
-                        <p class="text-[10px] text-gray-500 mt-2 font-mono tracking-widest">ETA: 4.2s</p>
-                    </div>
-
-                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center opacity-30">
-                        <i class="fas fa-fingerprint text-9xl mb-4"></i>
-                        <p class="text-sm tracking-widest uppercase font-bold">Waiting for input</p>
-                    </div>
-                </div>
-
-                <div id="action-bar" class="flex gap-4 opacity-0 pointer-events-none transition-all duration-500 translate-y-4">
-                    <button onclick="downloadImage()" class="flex-1 bg-white text-black py-4 rounded-xl font-bold hover:bg-gray-200 transition flex items-center justify-center gap-2">
-                        <i class="fas fa-download"></i> <span id="btn-download">DOWNLOAD HD</span>
-                    </button>
-                    <button onclick="saveToGallery()" class="px-8 glass-panel hover:bg-white/10 transition flex items-center justify-center">
-                        <i class="fas fa-heart text-red-500"></i>
-                    </button>
-                </div>
-
-                <div class="pt-4 border-t border-white/5">
-                    <h4 id="lbl-history" class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Recent Creations</h4>
-                    <div id="history-track" class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
-                        </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
     <script>
-        // --- 1. إعدادات الترجمة (اللغة العربية معدلة) ---
-        const uiText = {
-            en: {
-                hero: "Create the<br>Extraordinary.",
-                sub: "AI-Powered branding generated in seconds.",
-                brand: "Brand Name",
-                elem: "Visual Element",
-                style: "Aesthetic Style",
-                gen: "GENERATE IDENTITY",
-                load: "GENERATING PIXELS...",
-                dl: "DOWNLOAD HD",
-                hist: "RECENT CREATIONS",
-                sys: "SYSTEM"
+        /**
+         * GLOBAL CONFIGURATION & STATE
+         * Defines base API endpoints, style prompts, and active application state.
+         */
+        const CONFIG = {
+            // Using the most reliable endpoint path based on recent tests
+            apiBase: "https://image.pollinations.ai/prompt/",
+            
+            // Pre-defined professional prompt modifiers
+            styles: {
+                classic_luxury: "luxury logo design, classic emblem, elegant serif typography, gold and deep rich colors, metallic texture, premium branding, centered, highly detailed, 8k resolution",
+                modern_minimal: "minimalist logo, modern flat design, clean geometric lines, sans-serif font, abstract icon, balanced, negative space, isolated on plain background",
+                vintage_badge: "vintage retro badge logo, textured stamp effect, old school typography, circular emblem, rustic colors, intricate details, grunge texture",
+                abstract_mark: "abstract logo mark, futuristic shapes, gradient colors, fluid design, tech company branding, innovative symbol, clean render"
             },
-            ar: {
-                hero: "اصنع المستحيل<br>في ثوانٍ.",
-                sub: "هوية بصرية احترافية بقوة الذكاء الاصطناعي.",
-                brand: "اسم العلامة",
-                elem: "العنصر البصري",
-                style: "النمط الفني",
-                gen: "صناعة الشعار الآن",
-                load: "جاري صنع الشعار...", // التعديل المطلوب بدقة
-                dl: "تحميل بجودة عالية",
-                hist: "آخر التصاميم",
-                sys: "النظام"
+
+            // Status messages for the loader
+            statusMessages: [
+                "جاري تهيئة محرك الذكاء الاصطناعي...",
+                "تحليل مدخلات العلامة التجارية...",
+                "رسم الخطوط الأولية...",
+                "تطبيق أسلوب التصميم المختار...",
+                "إضافة اللمسات النهائية والظلال...",
+                "جاري تحسين الدقة (Upscaling)..."
+            ]
+        };
+
+        // Main State Object
+        let state = {
+            isGenerating: false,
+            currentStyle: 'classic_luxury',
+            currentImageUrl: null,
+            // Editor filter values
+            filters: {
+                brightness: 100,
+                contrast: 100,
+                saturate: 100,
+                'hue-rotate': 0,
+                sepia: 0
             },
-            es: {
-                hero: "Crea lo<br>Extraordinario.",
-                sub: "Branding con IA generado en segundos.",
-                brand: "Nombre de Marca",
-                elem: "Elemento Visual",
-                style: "Estilo Estético",
-                gen: "GENERAR IDENTIDAD",
-                load: "GENERANDO PÍXELES...",
-                dl: "DESCARGAR HD",
-                hist: "CREACIONES RECIENTES",
-                sys: "SISTEMA"
+            // History array loaded from local storage
+            history: JSON.parse(localStorage.getItem('nexus_history')) || []
+        };
+
+        /**
+         * MODULE: UI CONTROLLER (app)
+         * Handles general interface interactions.
+         */
+        const app = {
+            init() {
+                // Initial setup on page load
+                gallery.render();
+                console.log("Nexus Studio: Classic Edition Initialized.");
+            },
+
+            // Helper to fill example inputs
+            fillInput(id, value) {
+                document.getElementById(id).value = value;
+            },
+
+            // Handle style card selection
+            selectStyle(element, styleKey) {
+                if (state.isGenerating) return;
+                // Update UI
+                document.querySelectorAll('.style-card').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                // Update State
+                state.currentStyle = styleKey;
+            },
+
+            // Update status text near the button
+            setStatus(msg, type = 'normal') {
+                const el = document.getElementById('statusText');
+                el.innerText = msg;
+                el.className = type === 'error' ? 'text-center text-xs text-accent-danger mt-3 font-mono h-4' : 'text-center text-xs text-text-muted mt-3 font-mono h-4';
             }
         };
 
-        // --- 2. المتغيرات العامة ---
-        let currentLang = 'en';
-        let selectedStyle = 'minimalist vector flat clean';
-        let isProcessing = false;
-        
-        // --- 3. وظائف النظام الأساسية ---
-        
-        // إزالة شاشة التحميل عند البدء
-        window.addEventListener('load', () => {
-            initParticles(); // تشغيل الخلفية
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0';
-                setTimeout(() => splash.remove(), 800);
-            }, 1000);
+        /**
+         * MODULE: CORE ENGINE (core)
+         * Handles the generation process, API calls, and loading states.
+         */
+        const core = {
+            async initiateGeneration() {
+                if (state.isGenerating) return;
+
+                // 1. Validation
+                const brandName = document.getElementById('brandName').value.trim();
+                if (!brandName) {
+                    alert("يرجى إدخال اسم العلامة التجارية أولاً.");
+                    document.getElementById('brandName').focus();
+                    return;
+                }
+
+                // 2. Prepare State & UI
+                state.isGenerating = true;
+                const generateBtn = document.getElementById('generateBtn');
+                generateBtn.disabled = true;
+                generateBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>جاري العمل...</span>';
+                
+                document.getElementById('stagePlaceholder').classList.add('hidden');
+                document.getElementById('editorPanel').classList.add('hidden');
+                this.toggleLoader(true);
+
+                // 3. Construct the Advanced Prompt
+                const visualElement = document.getElementById('visualElement').value.trim();
+                const tagline = document.getElementById('tagline').value.trim();
+                const isTransparent = document.getElementById('transparentBg').checked;
+                
+                const baseStyle = CONFIG.styles[state.currentStyle];
+                
+                let fullPrompt = `${baseStyle}. A professional logo for brand "${brandName}".`;
+                if (visualElement) fullPrompt += ` Featuring an icon of: ${visualElement}.`;
+                if (tagline) fullPrompt += ` Incorporating the tagline: "${tagline}".`;
+                if (isTransparent) fullPrompt += ` Isolated on a transparent background, no background elements.`;
+                else fullPrompt += ` Centered on a clean professional background.`;
+
+                console.log("Generating with prompt:", fullPrompt);
+
+                // 4. API Call with "Smart Routing" (Retries)
+                // We use a random seed to prevent caching and force a new generation.
+                const seed = Math.floor(Math.random() * 99999999);
+                constencodedPrompt = encodeURIComponent(fullPrompt);
+                
+                // Primary URL structure (most reliable currently)
+                const targetUrl = `${CONFIG.apiBase}${encodedPrompt}?width=1024&height=1024&seed=${seed}&nologo=true&model=turbo`; // Adding model=turbo for speed
+
+                try {
+                    await this.loadImageWithFallback(targetUrl);
+                    // Success handled in loadImageWithFallback callback
+                } catch (error) {
+                    console.error("Generation Failed:", error);
+                    app.setStatus("فشل الاتصال بالسيرفر. يرجى المحاولة مرة أخرى.", "error");
+                    this.resetUIState();
+                }
+            },
+
+            // Smart Image Loader with timeout and error handling
+            loadImageWithFallback(url) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.crossOrigin = "Anonymous"; // Crucial for Canvas editing later
+
+                    // Timeout warning
+                    const timeoutToast = setTimeout(() => {
+                         app.setStatus("الاتصال يستغرق وقتاً أطول من المعتاد...");
+                    }, 8000);
+
+                    img.onload = () => {
+                        clearTimeout(timeoutToast);
+                        this.handleGenerationSuccess(img, url);
+                        resolve(url);
+                    };
+
+                    img.onerror = () => {
+                        clearTimeout(timeoutToast);
+                        // Simple retry logic could be added here, but for now fail fast.
+                        reject(new Error("Image failed to load"));
+                    };
+
+                    img.src = url;
+                });
+            },
+
+            handleGenerationSuccess(imgObj, url) {
+                // Update State
+                state.currentImageUrl = url;
+                
+                // Initialize Editor with the new image
+                editor.init(imgObj);
+                
+                // Save to History
+                gallery.add(url, document.getElementById('brandName').value);
+
+                // Update UI
+                this.resetUIState();
+                document.getElementById('editorPanel').classList.remove('hidden');
+                app.setStatus("تم إنشاء الشعار بنجاح!");
+                // Extract colors (simple simulation for now)
+                this.extractColors();
+            },
+
+            toggleLoader(show) {
+                 const loader = document.getElementById('loaderOverlay');
+                 const progressBar = document.getElementById('progressBar');
+                 const statusText = document.getElementById('loaderStatus');
+
+                 if (show) {
+                     loader.classList.add('active');
+                     progressBar.style.width = '100%'; // Start animation
+                     
+                     // Cycle status messages
+                     let msgIndex = 0;
+                     statusText.innerText = CONFIG.statusMessages[0];
+                     this.msgInterval = setInterval(() => {
+                         msgIndex = (msgIndex + 1) % CONFIG.statusMessages.length;
+                         statusText.innerText = CONFIG.statusMessages[msgIndex];
+                     }, 2000);
+
+                 } else {
+                     loader.classList.remove('active');
+                     progressBar.style.width = '0';
+                     clearInterval(this.msgInterval);
+                 }
+            },
+
+            resetUIState() {
+                state.isGenerating = false;
+                this.toggleLoader(false);
+                const generateBtn = document.getElementById('generateBtn');
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i><span>بدء تصميم الشعار</span>';
+            },
+
+            // Simulates color extraction (a real one needs complex JS libraries)
+            extractColors() {
+                const paletteContainer = document.getElementById('colorPalette');
+                paletteContainer.innerHTML = '';
+                
+                // Generate 4 pseudo-random complementary colors based on the style
+                const baseColors = state.currentStyle === 'classic_luxury' ? ['#d4af37', '#0a0a0f', '#ffffff', '#888888'] : 
+                                   state.currentStyle === 'modern_minimal' ? ['#3b82f6', '#ffffff', '#000000', '#e5e7eb'] :
+                                   ['#FF5733', '#C70039', '#900C3F', '#581845']; // Fallback
+
+                baseColors.forEach(color => {
+                    const colorDot = document.createElement('div');
+                    colorDot.className = 'w-8 h-8 rounded-full border border-border-light shadow-sm cursor-pointer hover:scale-110 transition';
+                    colorDot.style.backgroundColor = color;
+                    colorDot.title = color;
+                    colorDot.onclick = () => { navigator.clipboard.writeText(color); alert(`تم نسخ كود اللون: ${color}`); };
+                    paletteContainer.appendChild(colorDot);
+                });
+            }
+        };
+
+        /**
+         * MODULE: IMAGE EDITOR (editor)
+         * Handles canvas manipulation for post-processing features.
+         */
+        const editor = {
+            canvas: null,
+            ctx: null,
+            originalImage: null,
+
+            init(imgObj) {
+                this.canvas = document.getElementById('main-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.originalImage = imgObj;
+
+                // Set canvas dimensions to match image
+                this.canvas.width = imgObj.width;
+                this.canvas.height = imgObj.height;
+                
+                // Show canvas
+                this.canvas.classList.remove('hidden');
+
+                // Initial Draw
+                this.reset();
+            },
+
+            // Called when a slider changes
+            update(filterType, value, unit = '%') {
+                // Update UI label
+                document.getElementById(`val-${filterType}`).innerText = value + unit;
+                // Update State
+                state.filters[filterType] = value;
+                // Redraw
+                this.applyFilters();
+            },
+
+            applyFilters() {
+                if (!this.ctx || !this.originalImage) return;
+
+                // Clear previous frame
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Construct CSS filter string based on state
+                const f = state.filters;
+                this.ctx.filter = `
+                    brightness(${f.brightness}%) 
+                    contrast(${f.contrast}%) 
+                    saturate(${f.saturate}%) 
+                    hue-rotate(${f['hue-rotate']}deg)
+                `;
+
+                // Draw the image with filters applied
+                this.ctx.drawImage(this.originalImage, 0, 0);
+            },
+
+            reset() {
+                // Reset state variables
+                state.filters = { brightness: 100, contrast: 100, saturate: 100, 'hue-rotate': 0, sepia: 0 };
+                
+                // Reset sliders UI
+                document.getElementById('in-brightness').value = 100; document.getElementById('val-brightness').innerText = '100%';
+                document.getElementById('in-contrast').value = 100; document.getElementById('val-contrast').innerText = '100%';
+                document.getElementById('in-saturate').value = 100; document.getElementById('val-saturate').innerText = '100%';
+                document.getElementById('in-hue-rotate').value = 0; document.getElementById('val-hue-rotate').innerText = '0deg';
+
+                this.applyFilters();
+            },
+
+            download() {
+                if (!this.canvas) return;
+                
+                // Use the canvas data (with filters applied)
+                const dataURL = this.canvas.toDataURL('image/png');
+                
+                const link = document.createElement('a');
+                link.download = `Nexus_Logo_${Date.now()}.png`;
+                link.href = dataURL;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        };
+
+        /**
+         * MODULE: GALLERY / HISTORY (gallery)
+         * Manages local storage persistence of generated images.
+         */
+        const gallery = {
+            sidebar: document.getElementById('gallerySidebar'),
+            grid: document.getElementById('galleryGrid'),
+
+            toggle() {
+                this.sidebar.classList.toggle('translate-x-full');
+            },
+
+            add(url, name) {
+                // Add to state array (limit to last 10)
+                state.history.unshift({ url, name, date: new Date().toLocaleDateString() });
+                if (state.history.length > 10) state.history.pop();
+                
+                // Save to LocalStorage
+                localStorage.setItem('nexus_history', JSON.stringify(state.history));
+                
+                this.render();
+            },
+
+            render() {
+                this.grid.innerHTML = '';
+                if (state.history.length === 0) {
+                    this.grid.innerHTML = '<p class="text-text-muted text-center py-4">لا يوجد سجل حتى الآن</p>';
+                    return;
+                }
+
+                state.history.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-bg-tertiary border border-border-light rounded-lg overflow-hidden flex gap-3 p-2 items-center hover:border-accent-secondary transition cursor-pointer';
+                    card.innerHTML = `
+                        <img src="${item.url}" class="w-16 h-16 object-cover rounded border border-border-light bg-bg-main">
+                        <div class="flex-1 overflow-hidden">
+                            <h4 class="font-bold truncate">${item.name}</h4>
+                            <span class="text-xs text-text-muted">${item.date}</span>
+                        </div>
+                        <button onclick="gallery.restore(${index})" class="btn-secondary text-xs px-2 py-1"><i class="fa-solid fa-upload"></i></button>
+                    `;
+                    this.grid.appendChild(card);
+                });
+            },
+
+            restore(index) {
+                const item = state.history[index];
+                // Load image back into editor
+                core.toggleLoader(true);
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = () => {
+                    editor.init(img);
+                    document.getElementById('editorPanel').classList.remove('hidden');
+                    document.getElementById('stagePlaceholder').classList.add('hidden');
+                    core.toggleLoader(false);
+                    this.toggle(); // Close sidebar
+                };
+                img.src = item.url;
+            },
+
+            clear() {
+                if(confirm('هل أنت متأكد من مسح السجل بالكامل؟')) {
+                    state.history = [];
+                    localStorage.removeItem('nexus_history');
+                    this.render();
+                }
+            }
+        };
+
+        // --- Initialize Application ---
+        // Wait for DOM to be ready
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
         });
 
-        // تبديل القائمة
-        function toggleMenu() {
-            document.getElementById('sidebar-menu').classList.toggle('open');
-            document.querySelector('.overlay-bg').classList.toggle('active');
-        }
-
-        // تغيير اللغة
-        function setLanguage(lang) {
-            currentLang = lang;
-            const t = uiText[lang];
-            const isAr = lang === 'ar';
-            
-            // ضبط الاتجاه والخط
-            document.getElementById('app-root').dir = isAr ? 'rtl' : 'ltr';
-            document.body.style.fontFamily = isAr ? 'var(--font-ar)' : 'var(--font-en)';
-
-            // تحديث النصوص
-            document.getElementById('hero-title').innerHTML = t.hero;
-            document.getElementById('hero-desc').innerText = t.sub;
-            document.getElementById('lbl-brand').innerText = t.brand;
-            document.getElementById('lbl-icon').innerText = t.elem;
-            document.getElementById('lbl-style').innerText = t.style;
-            document.getElementById('btn-generate').innerHTML = `<i class="fas fa-bolt mr-2"></i> ${t.gen}`;
-            document.getElementById('loading-text').innerText = t.load;
-            document.getElementById('btn-download').innerText = t.dl;
-            document.getElementById('lbl-history').innerText = t.hist;
-
-            toggleMenu(); // إغلاق القائمة بعد الاختيار
-        }
-
-        // اختيار النمط
-        function selectStyle(style, element) {
-            selectedStyle = style;
-            document.querySelectorAll('.style-card').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-        }
-
-        // --- 4. المحرك الأساسي (The Engine) ---
-
-        async function startGeneration() {
-            if (isProcessing) return;
-
-            const brandName = document.getElementById('brand-input').value.trim();
-            const element = document.getElementById('element-input').value.trim();
-
-            if (!brandName) {
-                // تأثير اهتزاز الحقل إذا كان فارغاً
-                const input = document.getElementById('brand-input');
-                input.style.borderColor = '#ff0055';
-                input.classList.add('animate-bounce');
-                setTimeout(() => {
-                    input.style.borderColor = '';
-                    input.classList.remove('animate-bounce');
-                }, 1000);
-                return;
-            }
-
-            // بدء العملية
-            isProcessing = true;
-            const loader = document.getElementById('loader');
-            const mainImg = document.getElementById('main-image');
-            const emptyState = document.getElementById('empty-state');
-            const actionBar = document.getElementById('action-bar');
-
-            // واجهة المستخدم: وضع التحميل
-            loader.classList.add('active');
-            emptyState.style.display = 'none';
-            mainImg.classList.remove('loaded');
-            actionBar.style.opacity = '0';
-            actionBar.style.transform = 'translateY(20px)';
-            
-            // تحديث نص الانتظار حسب اللغة
-            document.getElementById('loading-text').innerText = uiText[currentLang].load;
-
-            // بناء الرابط الذكي (Smart Prompt)
-            // نطلب جودة عالية (8k) ولكن نستخدم موديل turbo للسرعة
-            const prompt = `Professional logo design for "${brandName}", featuring ${element}, ${selectedStyle}, vector graphics, white background, high quality, 8k resolution, centered composition`;
-            const seed = Math.floor(Math.random() * 9999999);
-            
-            // الرابط المباشر مع تجاوز الكاش
-            const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&model=turbo&nologo=true`;
-
-            // تقنية التحميل المسبق (Pre-loading Image Object)
-            // هذا يضمن أن الصورة حملت بالكامل قبل عرضها
-            const tempImg = new Image();
-            
-            // مؤقت أمان: إذا تأخرت الصورة أكثر من 10 ثوانٍ، نعيد المحاولة
-            const safetyTimeout = setTimeout(() => {
-                if (isProcessing) {
-                    console.log("Timeout triggered, retrying...");
-                    // إعادة محاولة صامتة
-                    tempImg.src = imageUrl + "&retry=1"; 
-                }
-            }, 10000);
-
-            tempImg.onload = function() {
-                clearTimeout(safetyTimeout);
-                // الصورة جاهزة الآن
-                mainImg.src = imageUrl;
-                
-                // تأخير بسيط جداً للسلاسة
-                setTimeout(() => {
-                    loader.classList.remove('active');
-                    mainImg.classList.add('loaded');
-                    actionBar.style.opacity = '1';
-                    actionBar.style.pointerEvents = 'all';
-                    actionBar.style.transform = 'translateY(0)';
-                    
-                    // إضافة للهيستوري تلقائياً
-                    addToHistory(imageUrl);
-                    isProcessing = false;
-                }, 500);
-            };
-
-            tempImg.onerror = function() {
-                isProcessing = false;
-                alert("Connection glitch. Retrying automatically usually fixes this.");
-                loader.classList.remove('active');
-            };
-
-            tempImg.src = imageUrl;
-        }
-
-        // تحميل الصورة
-        async function downloadImage() {
-            const img = document.getElementById('main-image');
-            if (!img.src) return;
-            
-            try {
-                const response = await fetch(img.src);
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Infinity_Logo_${Date.now()}.png`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            } catch (e) {
-                // Fallback (فتح في نافذة جديدة)
-                window.open(img.src, '_blank');
-            }
-        }
-
-        // إدارة السجل (History)
-        function addToHistory(url) {
-            const track = document.getElementById('history-track');
-            const div = document.createElement('div');
-            div.className = 'w-16 h-16 min-w-[64px] rounded-lg border border-white/20 overflow-hidden cursor-pointer hover:scale-110 transition bg-black';
-            div.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onclick="restoreImage('${url}')">`;
-            track.prepend(div);
-            
-            // الاحتفاظ بآخر 10 صور فقط
-            if (track.children.length > 10) track.removeChild(track.lastChild);
-        }
-
-        function restoreImage(url) {
-            const mainImg = document.getElementById('main-image');
-            const actionBar = document.getElementById('action-bar');
-            const emptyState = document.getElementById('empty-state');
-            
-            emptyState.style.display = 'none';
-            mainImg.src = url;
-            mainImg.classList.add('loaded');
-            actionBar.style.opacity = '1';
-            actionBar.style.pointerEvents = 'all';
-            actionBar.style.transform = 'translateY(0)';
-        }
-
-        // --- 5. نظام الجسيمات (Background Particles) ---
-        function initParticles() {
-            const canvas = document.getElementById('canvas-bg');
-            const ctx = canvas.getContext('2d');
-            let width, height, particles;
-
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
-
-            function createParticles() {
-                particles = [];
-                const count = window.innerWidth < 768 ? 30 : 60; // تخفيف الحمل على الجوال
-                for (let i = 0; i < count; i++) {
-                    particles.push({
-                        x: Math.random() * width,
-                        y: Math.random() * height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        size: Math.random() * 2,
-                        alpha: Math.random() * 0.5
-                    });
-                }
-            }
-
-            function animate() {
-                ctx.clearRect(0, 0, width, height);
-                ctx.fillStyle = '#fff';
-                
-                particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    if (p.x < 0) p.x = width;
-                    if (p.x > width) p.x = 0;
-                    if (p.y < 0) p.y = height;
-                    if (p.y > height) p.y = 0;
-
-                    ctx.globalAlpha = p.alpha;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-                
-                requestAnimationFrame(animate);
-            }
-
-            window.addEventListener('resize', () => { resize(); createParticles(); });
-            resize();
-            createParticles();
-            animate();
-        }
     </script>
 </body>
 </html>
