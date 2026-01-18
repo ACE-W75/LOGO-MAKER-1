@@ -1097,3 +1097,200 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS PRO | الإصدار المستقر</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #050505;
+            color: white;
+            touch-action: pan-y; /* يسمح فقط بالتمرير الرأسي الطبيعي */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* حاوية الصورة المستقرة */
+        .stage-box {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #111;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 2px solid #222;
+            overflow: hidden;
+        }
+
+        #mainImg {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+            transition: filter 0.3s ease;
+        }
+
+        /* أزرار التحكم الكبيرة للهاتف */
+        .step-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            flex: 1;
+            touch-action: manipulation;
+        }
+
+        .step-btn:active {
+            background: #333;
+            transform: scale(0.95);
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #d4af37, #f2d06b);
+            color: black;
+            font-weight: 800;
+            padding: 20px;
+            border-radius: 16px;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        /* منع التحديث عند السحب لأسفل */
+        html, body { overscroll-behavior-y: contain; }
+
+        .loader-dots {
+            display: none;
+            gap: 5px;
+        }
+        .dot { width: 10px; height: 10px; background: #d4af37; border-radius: 50%; animation: bounce 0.5s infinite alternate; }
+        .dot:nth-child(2) { animation-delay: 0.1s; }
+        .dot:nth-child(3) { animation-delay: 0.2s; }
+        @keyframes bounce { to { transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-black text-amber-500">NEXUS PRO</h1>
+            <p class="text-xs text-gray-500">نظام التصميم الفوري المستقر</p>
+        </div>
+        <i class="fas fa-shield-alt text-gray-700"></i>
+    </div>
+
+    <div class="stage-box mb-6 shadow-2xl" id="stage">
+        <div id="placeholder" class="text-center p-8">
+            <i class="fas fa-magic text-4xl text-gray-800 mb-4"></i>
+            <p class="text-gray-600 text-sm">أدخل البيانات واضغط "إنشاء"</p>
+        </div>
+        
+        <img id="mainImg" src="" alt="Logo">
+
+        <div id="loader" class="absolute inset-0 bg-black/80 flex-col items-center justify-center hidden">
+            <div class="loader-dots flex mb-4" id="dots">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <p class="text-amber-500 text-sm font-bold">جاري التصميم...</p>
+        </div>
+    </div>
+
+    <div class="space-y-4 mb-8">
+        <input type="text" id="brand" placeholder="اسم البراند (بالعربية أو الإنجليزية)" 
+               class="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl outline-none focus:border-amber-500">
+        
+        <input type="text" id="idea" placeholder="فكرة الرمز (مثلاً: سيف، منزل، تكنولوجيا)" 
+               class="w-full bg-zinc-900 border border-zinc-800 p-4 rounded-xl outline-none focus:border-amber-500">
+
+        <button onclick="generate()" id="btnAction" class="primary-btn shadow-lg">
+            إنشــــاء الشعار
+        </button>
+    </div>
+
+    <div id="controls" class="hidden space-y-6 bg-zinc-900/50 p-4 rounded-2xl border border-zinc-800">
+        <h3 class="text-sm font-bold text-gray-400 text-center uppercase tracking-widest">تعديل الإضاءة واللون</h3>
+        
+        <div class="flex gap-2">
+            <button onclick="adjust('brightness', -10)" class="step-btn"><i class="fas fa-minus"></i></button>
+            <div class="flex-[2] text-center flex flex-col justify-center">
+                <span class="text-xs text-gray-500">السطوع</span>
+                <span id="brightVal" class="font-bold">100%</span>
+            </div>
+            <button onclick="adjust('brightness', 10)" class="step-btn"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <div class="flex gap-2">
+            <button onclick="adjust('contrast', -10)" class="step-btn"><i class="fas fa-minus"></i></button>
+            <div class="flex-[2] text-center flex flex-col justify-center">
+                <span class="text-xs text-gray-500">التباين</span>
+                <span id="contVal" class="font-bold">100%</span>
+            </div>
+            <button onclick="adjust('contrast', 10)" class="step-btn"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <button onclick="download()" class="w-full bg-white text-black p-4 rounded-xl font-bold">
+            <i class="fas fa-save ml-2"></i> حفظ في استوديو الصور
+        </button>
+    </div>
+
+    <script>
+        let currentFilters = { brightness: 100, contrast: 100 };
+
+        async function generate() {
+            const b = document.getElementById('brand').value;
+            const i = document.getElementById('idea').value;
+            if(!b) return alert("يرجى كتابة الاسم");
+
+            // إظهار اللودر
+            document.getElementById('loader').style.display = 'flex';
+            document.getElementById('dots').style.display = 'flex';
+            document.getElementById('btnAction').disabled = true;
+
+            const seed = Math.floor(Math.random() * 99999);
+            const prompt = `professional clean logo, ${b}, ${i}, vector, isolated on white background`;
+            const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1000&height=1000&seed=${seed}&nologo=true`;
+
+            const img = document.getElementById('mainImg');
+            img.src = url;
+
+            img.onload = () => {
+                img.style.display = 'block';
+                document.getElementById('placeholder').style.display = 'none';
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('controls').classList.remove('hidden');
+                document.getElementById('btnAction').disabled = false;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+        }
+
+        // نظام التحكم بالضغط (Step Control) بديل السلايدر
+        function adjust(type, change) {
+            currentFilters[type] += change;
+            if(currentFilters[type] < 50) currentFilters[type] = 50;
+            if(currentFilters[type] > 200) currentFilters[type] = 200;
+
+            // تحديث الأرقام
+            document.getElementById(type === 'brightness' ? 'brightVal' : 'contVal').innerText = currentFilters[type] + '%';
+            
+            // تطبيق الفلتر
+            document.getElementById('mainImg').style.filter = 
+                `brightness(${currentFilters.brightness}%) contrast(${currentFilters.contrast}%)`;
+        }
+
+        function download() {
+            const url = document.getElementById('mainImg').src;
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nexus-logo.png';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
